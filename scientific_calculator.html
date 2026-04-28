@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scientific Calculator</title>
+
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #1e1e1e;
+      font-family: Arial;
+    }
+
+    .calculator {
+      background: #2c2c2c;
+      padding: 20px;
+      border-radius: 12px;
+      width: 320px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    #display {
+      width: 100%;
+      height: 60px;
+      font-size: 22px;
+      margin-bottom: 10px;
+      text-align: right;
+      padding: 10px;
+      border: none;
+      outline: none;
+      border-radius: 8px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      height: 50px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #555;
+      color: white;
+    }
+
+    .equal { background: orange; color: white; }
+    .clear { background: red; color: white; }
+    .func  { background: #444; color: #0ff; }
+  </style>
+</head>
+
+<body>
+
+<div class="calculator">
+  <input type="text" id="display" readonly>
+
+  <div class="buttons">
+    <button class="clear" onclick="clearDisplay()">C</button>
+    <button onclick="deleteLast()">⌫</button>
+    <button onclick="append('/')">/</button>
+    <button onclick="append('*')">*</button>
+
+    <button class="func" onclick="append('sin(')">sin</button>
+    <button class="func" onclick="append('cos(')">cos</button>
+    <button class="func" onclick="append('tan(')">tan</button>
+    <button onclick="append('-')">-</button>
+
+    <button onclick="append('7')">7</button>
+    <button onclick="append('8')">8</button>
+    <button onclick="append('9')">9</button>
+    <button onclick="append('+')">+</button>
+
+    <button onclick="append('4')">4</button>
+    <button onclick="append('5')">5</button>
+    <button onclick="append('6')">6</button>
+    <button class="equal" onclick="calculate()">=</button>
+
+    <button onclick="append('1')">1</button>
+    <button onclick="append('2')">2</button>
+    <button onclick="append('3')">3</button>
+    <button onclick="append('(')">(</button>
+
+    <button onclick="append('0')">0</button>
+    <button onclick="append('.')">.</button>
+    <button onclick="append(')')">)</button>
+  </div>
+</div>
+
+<script>
+  let display = document.getElementById("display");
+
+  function append(value) {
+    display.value += value;
+  }
+
+  function clearDisplay() {
+    display.value = "";
+  }
+
+  function deleteLast() {
+    display.value = display.value.slice(0, -1);
+  }
+
+  function calculate() {
+    try {
+      let exp = display.value;
+
+      // Convert trig functions (degrees → radians)
+      exp = exp
+        .replace(/sin\((.*?)\)/g, (_, v) => `Math.sin(${v} * Math.PI / 180)`)
+        .replace(/cos\((.*?)\)/g, (_, v) => `Math.cos(${v} * Math.PI / 180)`)
+        .replace(/tan\((.*?)\)/g, (_, v) => `Math.tan(${v} * Math.PI / 180)`);
+
+      display.value = eval(exp);
+    } catch {
+      display.value = "Error";
+    }
+  }
+</script>
+
+</body>
+</html>
